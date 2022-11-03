@@ -19,7 +19,14 @@ variables:
 
 stages:
 - stage: 'Build'
-  jobs:
+- task: AzureRmWebAppDeployment@4
+  inputs:
+    ConnectionType: 'AzureRM'
+    azureSubscription: 'Azure subscription 1 (824afe03-fb16-40e3-b06c-ece467b78076)'
+    appType: 'webAppLinux'
+    WebAppName: 'reshapp'
+    packageForLinux: '$(System.DefaultWorkingDirectory)/**/*.zip'
+    jobs:
   - job: 'Build'
     steps:
     - script: dotnet build --configuration $(buildConfiguration)
@@ -48,3 +55,23 @@ stages:
     #     publishWebProjects: true
     #     arguments: '--configuration $(buildConfiguration) -f $(dotNetFramework) --runtime $(targetRuntime) --self-contained -o $(Build.ArtifactStagingDirectory)'
     #     zipAfterPublish: true
+    - stage: 'DeployDev'
+  displayName: 'Deploy to Dev'
+  # condition: and(succeeded(), eq(variables.isMain, 'true'))
+  variables: 
+    appName: 'reshapp'
+    jobs:
+  - deployment: 'Dev'
+     
+    environment: 'Dev'
+    strategy: 
+       runOnce:     
+        deploy:
+          steps:
+          - task: AzureRmWebAppDeployment@4
+            inputs:
+              ConnectionType: 'AzureRM'
+              azureSubscription: 'Pay-As-You-Go(63b33cff-5a1f-40bc-8e84-ad332cd71188)'
+              appType: 'webAppLinux'
+              WebAppName: $(appName)
+              packageForLinux: '$(Pipeline.Workspace)/$(artifaceName)/$(buildConfiguration)/*.zip'
