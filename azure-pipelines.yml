@@ -19,7 +19,7 @@ variables:
   dotNetFramework: 'net6.0'
   repository: 'walmartpayment'
   namespace: 'walmartdev'
-  k8sconnection: 'kubewalmartdev'
+  k8sconnection: 'k8srtech'
   imagePullSecret: 'test'
 
 stages:
@@ -63,7 +63,7 @@ stages:
            - task: KubernetesManifest@0
              displayName: Create imagePullSecret
              inputs:
-                kubernetesServiceConnection: $(k8sconnection)
+                kubernetesServiceConnection: $(k8srtech)
                 action: createSecret
                 secretName: $(imagePullSecret)
                 namespace: $(namespace)
@@ -72,7 +72,7 @@ stages:
            - task: KubernetesManifest@0
              displayName: Deploy
              inputs:
-              kubernetesServiceConnection: $(k8sconnection)
+              kubernetesServiceConnection: $(k8srtech)
               action: deploy
               namespace: $(namespace)
               manifests: |
