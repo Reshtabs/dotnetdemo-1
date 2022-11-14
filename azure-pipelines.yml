@@ -18,8 +18,10 @@ variables:
   namespace: 'walmartdev'
   k8sconnection: 'k8srtech'
   imagePullSecret: 'test'
+   containerRegistry: 'rtechacrshared.azurecr.io/walmartpayment:latest'
 
 stages:
+
 - stage: 'Build'
   jobs:
   - job: 'Build'
