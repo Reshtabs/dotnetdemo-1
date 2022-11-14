@@ -21,8 +21,7 @@ variables:
    containerRegistry: 'rtechacrshared.azurecr.io/walmartpayment:latest'
 
 stages:
-
-- stage: 'Build'
+ - stage: 'Build'
   jobs:
   - job: 'Build'
     steps:
